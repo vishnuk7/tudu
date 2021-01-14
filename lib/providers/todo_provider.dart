@@ -21,4 +21,9 @@ class TodoProvider with ChangeNotifier {
     _todos.add(_todo);
     notifyListeners();
   }
+
+  void toggleCompleted(var data) {
+    data.completed = !data.completed;
+    notifyListeners();
+  }
 }

@@ -98,40 +98,45 @@ class MyHomePage extends StatelessWidget {
                 padding: const EdgeInsets.all(8),
                 itemCount: todoProvider.todos.length,
                 itemBuilder: (BuildContext context, int index) {
-                  return Container(
-                      height: 80,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Row(
-                          children: [
-                            Container(
-                              child: CircularCheckBox(
-                                value: true,
-                                checkColor: Colors.white,
-                                activeColor: kGrey,
-                                inactiveColor: Colors.blue,
-                                disabledColor: Colors.blue,
-                                onChanged: (bool value) {},
+                  return InkWell(
+                    onTap: () {
+                      todoProvider.toggleCompleted(todoProvider.todos[index]);
+                    },
+                    child: Container(
+                        height: 80,
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: Row(
+                            children: [
+                              Container(
+                                child: CircularCheckBox(
+                                  value: todoProvider.todos[index].completed,
+                                  checkColor: Colors.white,
+                                  activeColor: kGrey,
+                                  inactiveColor: Colors.blue,
+                                  disabledColor: Colors.blue,
+                                  onChanged: (bool value) {},
+                                ),
                               ),
-                            ),
-                            Text(
-                              todoProvider.todos[index].title,
-                              style: TextStyle(
-                                fontSize: 18.0,
-                                fontWeight: FontWeight.w500,
+                              Text(
+                                todoProvider.todos[index].title,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontWeight: FontWeight.w500,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      ),
-                      padding: EdgeInsets.all(4),
-                      decoration: BoxDecoration(
-                        color: themeChangeProvider.darkTheme
-                            ? kBlackColor2
-                            : kWhiteColor2,
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [kBoxShadowLightTheme],
-                      ));
+                        padding: EdgeInsets.all(4),
+                        decoration: BoxDecoration(
+                          color: themeChangeProvider.darkTheme
+                              ? kBlackColor2
+                              : kWhiteColor2,
+                          borderRadius: BorderRadius.circular(20),
+                          boxShadow: [kBoxShadowLightTheme],
+                        )),
+                  );
                 },
                 separatorBuilder: (BuildContext context, int index) =>
                     Divider(),
