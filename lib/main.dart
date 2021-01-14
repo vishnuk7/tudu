@@ -1,88 +1,74 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:todo/pages/add_todo.dart';
 import 'package:todo/providers/dark_theme_provider.dart';
 import 'package:todo/styles/styles.dart';
 import 'package:todo/utils/constants.dart';
 import 'package:circular_check_box/circular_check_box.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(ChangeNotifierProvider(
+    create: (_) => DarkThemeProvider(),
+    child: MyApp(),
+  ));
 }
 
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
   // This widget is the root of your application.
-  DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
-
-  MyApp() {
-    getCurrentAppTheme();
-  }
-
-  void getCurrentAppTheme() async {
-    themeChangeProvider.darkTheme =
-        await themeChangeProvider.darkThemePreference.getTheme();
-  }
 
   @override
   Widget build(BuildContext context) {
+    final themeChangeProvider = Provider.of<DarkThemeProvider>(context);
     return MaterialApp(
       title: 'Flutter Demo',
-      theme: Styles.themeData(false, context),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+      home: MyHomePage(),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class MyHomePage extends StatelessWidget {
   final List<String> data = [
-    "ut",
+    "utli",
     "consequuntur repellat quos",
     "consectetur dolorem voluptas",
     "est-voluptas-autem"
   ];
 
-// Container(
-//           decoration: BoxDecoration(shape: BoxShape.circle, color: Colors.blue),
-//           child: Padding(
-//             padding: const EdgeInsets.all(10.0),
-//             child: _value
-//                 ? Icon(
-//                     Icons.check,
-//                     size: 30.0,
-//                     color: Colors.white,
-//                   )
-//                 : Icon(
-//                     Icons.check_box_outline_blank,
-//                     size: 30.0,
-//                     color: Colors.blue,
-//                   ),
-//           ),
-
   @override
   Widget build(BuildContext context) {
+    final themeChangeProvider = Provider.of<DarkThemeProvider>(context);
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
+              padding: EdgeInsets.fromLTRB(0.0, 20.0, 20.0, 0),
+              child: InkWell(
+                onTap: () {
+                  themeChangeProvider.darkTheme =
+                      !themeChangeProvider.darkTheme;
+                  print(themeChangeProvider.darkTheme);
+                },
+                child: Container(
+                  alignment: Alignment.topRight,
+                  child: themeChangeProvider.darkTheme
+                      ? SvgPicture.asset('assets/sun.svg')
+                      : SvgPicture.asset('assets/moon.svg'),
+                ),
+              ),
+            ),
+            Container(
               padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 8.0),
               child: Text(
                 "What's Up Vishnu!",
                 textAlign: TextAlign.left,
-                style: TextStyle(
-                    color: kBlackColor1,
-                    fontSize: 25.0,
-                    fontWeight: FontWeight.w600),
+                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w600),
               ),
             ),
             Container(
@@ -125,7 +111,9 @@ class _MyHomePageState extends State<MyHomePage> {
                       ),
                       padding: EdgeInsets.all(4),
                       decoration: BoxDecoration(
-                        color: kWhiteColor2,
+                        color: themeChangeProvider.darkTheme
+                            ? kBlackColor2
+                            : kWhiteColor2,
                         borderRadius: BorderRadius.circular(20),
                         boxShadow: [kBoxShadowLightTheme],
                       ));
@@ -149,3 +137,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 }
+
+// class MyHomePage extends StatefulWidget {
+//   MyHomePage({Key key, this.title}) : super(key: key);
+
+//   final String title;
+
+//   @override
+//   _MyHomePageState createState() => _MyHomePageState();
+// }

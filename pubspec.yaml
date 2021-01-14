@@ -27,6 +27,8 @@ dependencies:
     shared_preferences: ^0.5.12+4
     provider: ^4.3.2+3
 
+    flutter_svg: ^0.19.1
+
     circular_check_box: ^1.0.4
 
     # The following adds the Cupertino Icons font to your application.
@@ -42,6 +44,9 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
+    assets:
+        - assets/
+
     # The following line ensures that the Material Icons font is
     # included with your application, so that you can use the icons in
     # the material Icons class.

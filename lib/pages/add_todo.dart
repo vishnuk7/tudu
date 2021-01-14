@@ -1,35 +1,58 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:todo/providers/dark_theme_provider.dart';
 import 'package:todo/utils/constants.dart';
 
 class AddTodo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    final themeChangeProvider = Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       body: SafeArea(
           child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Column(
-            children: [
-              Container(
-                padding: EdgeInsets.all(40.0),
-                child: TextFormField(
-                  autofocus: true,
-                  cursorHeight: 40,
-                  cursorWidth: 3,
-                  cursorColor: kBlue,
-                  style: TextStyle(fontSize: 25.0),
-                  decoration: const InputDecoration(
-                      border: InputBorder.none,
-                      hintText: 'Enter new Task',
-                      hintStyle: TextStyle(
-                        fontSize: 25.0,
-                        color: kLightGrey,
-                      )),
+          Align(
+            alignment: Alignment.topRight,
+            child: InkWell(
+              onTap: () {
+                Navigator.of(context).pop();
+              },
+              child: Container(
+                margin: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                height: 50.0,
+                width: 50.0,
+                child: Icon(
+                  Icons.close,
+                  color: themeChangeProvider.darkTheme
+                      ? kWhiteColor1
+                      : kBlackColor1,
+                ),
+                decoration: BoxDecoration(
+                  border: Border.all(color: kGrey, width: 1.0),
+                  borderRadius: BorderRadius.circular(50.0),
+                  color: themeChangeProvider.darkTheme
+                      ? kBlackColor2
+                      : kWhiteColor1,
                 ),
               ),
-            ],
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.all(40.0),
+            child: TextFormField(
+              autofocus: true,
+              cursorHeight: 40,
+              cursorWidth: 3,
+              cursorColor: kBlue,
+              style: TextStyle(fontSize: 25.0),
+              decoration: const InputDecoration(
+                  border: InputBorder.none,
+                  hintText: 'Enter new Task',
+                  hintStyle: TextStyle(
+                    fontSize: 25.0,
+                    color: kLightGrey,
+                  )),
+            ),
           )
         ],
       )),
