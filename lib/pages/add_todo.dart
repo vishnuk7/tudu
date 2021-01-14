@@ -1,12 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/providers/dark_theme_provider.dart';
+import 'package:todo/providers/todo_provider.dart';
 import 'package:todo/utils/constants.dart';
 
 class AddTodo extends StatelessWidget {
+  // final TodoProvider todoProvider;
+
+  // AddTodo({Key key, @required this.todoProvider}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
+    TextEditingController todoController = new TextEditingController();
+
+    final todoProvider = Provider.of<TodoProvider>(context);
+
     final themeChangeProvider = Provider.of<DarkThemeProvider>(context);
+
     return Scaffold(
       body: SafeArea(
           child: Column(
@@ -40,6 +50,7 @@ class AddTodo extends StatelessWidget {
           Container(
             padding: EdgeInsets.all(40.0),
             child: TextFormField(
+              controller: todoController,
               autofocus: true,
               cursorHeight: 40,
               cursorWidth: 3,
@@ -57,7 +68,10 @@ class AddTodo extends StatelessWidget {
         ],
       )),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {},
+        onPressed: () {
+          print(todoController.text);
+          todoProvider.setTodos(todoController.text);
+        },
         backgroundColor: kBlue,
         label: Text('New Task'),
         tooltip: 'Increment',

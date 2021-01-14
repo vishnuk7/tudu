@@ -2,45 +2,60 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:todo/pages/add_todo.dart';
 import 'package:todo/providers/dark_theme_provider.dart';
+import 'package:todo/providers/todo_provider.dart';
 import 'package:todo/styles/styles.dart';
 import 'package:todo/utils/constants.dart';
 import 'package:circular_check_box/circular_check_box.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 void main() {
-  runApp(ChangeNotifierProvider(
-    create: (_) => DarkThemeProvider(),
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider<DarkThemeProvider>(
+          create: (_) => DarkThemeProvider()),
+      ChangeNotifierProvider<TodoProvider>(create: (_) => TodoProvider())
+    ],
     child: MyApp(),
   ));
 }
 
 // ignore: must_be_immutable
 class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
+  DarkThemeProvider darkThemeProvider = new DarkThemeProvider();
+
+  MyApp() {
+    getTheme();
+  }
+
+  getTheme() async {
+    darkThemeProvider.darkTheme =
+        await darkThemeProvider.darkThemePreference.getTheme();
+  }
 
   @override
   Widget build(BuildContext context) {
     final themeChangeProvider = Provider.of<DarkThemeProvider>(context);
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-      home: MyHomePage(),
-      debugShowCheckedModeBanner: false,
-    );
+        title: 'Flutter Demo',
+        theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+        home: MyHomePage(),
+        debugShowCheckedModeBanner: false);
   }
 }
 
 class MyHomePage extends StatelessWidget {
-  final List<String> data = [
-    "utli",
-    "consequuntur repellat quos",
-    "consectetur dolorem voluptas",
-    "est-voluptas-autem"
-  ];
+  // final List<String> data = [
+  //   "utli",
+  //   "consequuntur repellat quos",
+  //   "consectetur dolorem voluptas",
+  //   "est-voluptas-autem"
+  // ];
 
   @override
   Widget build(BuildContext context) {
     final themeChangeProvider = Provider.of<DarkThemeProvider>(context);
+
+    final todoProvider = Provider.of<TodoProvider>(context);
 
     return Scaffold(
       body: SafeArea(
@@ -81,7 +96,7 @@ class MyHomePage extends StatelessWidget {
             Expanded(
               child: ListView.separated(
                 padding: const EdgeInsets.all(8),
-                itemCount: data.length,
+                itemCount: todoProvider.todos.length,
                 itemBuilder: (BuildContext context, int index) {
                   return Container(
                       height: 80,
@@ -100,7 +115,7 @@ class MyHomePage extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              data[index],
+                              todoProvider.todos[index].title,
                               style: TextStyle(
                                 fontSize: 18.0,
                                 fontWeight: FontWeight.w500,
@@ -127,8 +142,11 @@ class MyHomePage extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.of(context)
-              .push(MaterialPageRoute(builder: (context) => AddTodo()));
+          Navigator.of(context).push(
+            MaterialPageRoute(
+              builder: (context) => AddTodo(),
+            ),
+          );
         },
         backgroundColor: kBlue,
         tooltip: 'Increment',
