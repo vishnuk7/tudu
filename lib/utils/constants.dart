@@ -13,6 +13,12 @@ const kBoxShadowLightTheme = BoxShadow(
 
 const kGrey = Color(0xFFD8DFF7);
 
+const kDarkGrey = Color(0xFF97A1C1);
+
+const kLightGrey = Color(0xFF8B98C5);
+
+const kBlue = Color(0xFF066AFF);
+
 const kBoxShadowBlackTheme = BoxShadow(
     color: Color.fromRGBO(19, 19, 21, 0.73),
     blurRadius: 17.0,
