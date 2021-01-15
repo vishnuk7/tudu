@@ -3,6 +3,7 @@ import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:todo/pages/add_todo.dart';
+import 'package:todo/pages/splash.dart';
 import 'package:todo/providers/dark_theme_provider.dart';
 import 'package:todo/providers/todo_provider.dart';
 import 'package:todo/styles/styles.dart';
@@ -53,7 +54,7 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         title: 'Flutter Demo',
         theme: Styles.themeData(themeChangeProvider.darkTheme, context),
-        home: MyHomePage(),
+        home: Splash(),
         debugShowCheckedModeBanner: false);
   }
 }
