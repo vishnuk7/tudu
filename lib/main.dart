@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 import 'package:provider/provider.dart';
@@ -67,6 +69,8 @@ class MyHomePage extends StatelessWidget {
   //   "est-voluptas-autem"
   // ];
 
+  int count = 0;
+
   @override
   Widget build(BuildContext context) {
     final themeChangeProvider = Provider.of<DarkThemeProvider>(context);
@@ -80,6 +84,7 @@ class MyHomePage extends StatelessWidget {
         _progress++;
       }
     }
+
     int precentageInt = 0;
     if (total != 0) {
       double precentage = (_progress / total) * 100;
@@ -340,32 +345,106 @@ class MyHomePage extends StatelessWidget {
 
     var renderPage = todoProvider.todos.length == 0 ? emptyPage() : page();
 
+    Future<void> _showMyDialog() async {
+      return showDialog<void>(
+        context: context,
+        barrierDismissible: false, // user must tap button!
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor:
+                themeChangeProvider.darkTheme ? kBlackColor2 : kWhiteColor2,
+            title: Text('How to delete'),
+            content: SingleChildScrollView(
+              child: ListBody(
+                children: <Widget>[
+                  Text('Swipe Left 👈 or Right 👉 to delete a todo'),
+                ],
+              ),
+            ),
+            actions: <Widget>[
+              TextButton(
+                child: Text('Close'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+
+    Timer _timer;
+
+    Future<void> _showCompleted() async {
+      return showDialog(
+          context: context,
+          builder: (BuildContext builderContext) {
+            _timer = Timer(Duration(seconds: 2), () {
+              Navigator.of(context).pop();
+            });
+
+            return AlertDialog(
+              backgroundColor: Colors.transparent,
+              elevation: 0,
+              content: SingleChildScrollView(
+                  child: SvgPicture.asset('assets/nice.svg')),
+            );
+          }).then((val) {
+        if (_timer.isActive) {
+          _timer.cancel();
+        }
+      });
+    }
+
     return Scaffold(
       body: SafeArea(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Container(
-              padding: EdgeInsets.fromLTRB(0.0, 20.0, 20.0, 0),
-              child: InkWell(
-                onTap: () {
-                  themeChangeProvider.darkTheme =
-                      !themeChangeProvider.darkTheme;
-                },
-                child: Container(
-                  alignment: Alignment.topRight,
-                  child: themeChangeProvider.darkTheme
-                      ? SvgPicture.asset('assets/sun.svg')
-                      : SvgPicture.asset('assets/moon.svg'),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Container(
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 20.0, 0),
+                  child: InkWell(
+                    onTap: () {
+                      _showMyDialog();
+                    },
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      child: themeChangeProvider.darkTheme
+                          ? SvgPicture.asset('assets/helpDark.svg')
+                          : SvgPicture.asset('assets/help.svg'),
+                    ),
+                  ),
                 ),
-              ),
+                Container(
+                  padding: EdgeInsets.fromLTRB(0.0, 20.0, 20.0, 0),
+                  child: InkWell(
+                    onTap: () {
+                      themeChangeProvider.darkTheme =
+                          !themeChangeProvider.darkTheme;
+                    },
+                    child: Container(
+                      alignment: Alignment.topRight,
+                      child: themeChangeProvider.darkTheme
+                          ? SvgPicture.asset('assets/sun.svg')
+                          : SvgPicture.asset('assets/moon.svg'),
+                    ),
+                  ),
+                ),
+              ],
             ),
             Container(
               padding: EdgeInsets.symmetric(vertical: 30.0, horizontal: 8.0),
               child: Text(
-                "What's Up Vishnu!",
+                "TUDU",
                 textAlign: TextAlign.left,
-                style: TextStyle(fontSize: 25.0, fontWeight: FontWeight.w600),
+                style: TextStyle(
+                    fontSize: 25.0,
+                    fontWeight: FontWeight.w600,
+                    letterSpacing: 10.0),
               ),
             ),
             renderPage

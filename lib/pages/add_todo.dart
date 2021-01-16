@@ -69,8 +69,10 @@ class AddTodo extends StatelessWidget {
       )),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-          print(todoController.text);
-          todoProvider.setTodos(todoController.text);
+          if (todoController.text != "") {
+            todoProvider.setTodos(todoController.text);
+            Navigator.of(context).pop();
+          }
         },
         backgroundColor: kBlue,
         label: Text('New Task'),
